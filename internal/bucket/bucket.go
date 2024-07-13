@@ -1,6 +1,7 @@
 package bucket
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"reflect"
@@ -10,14 +11,18 @@ const (
 	AwsProvider BucketType = iota
 )
 
-func New(t BucketType, cfg any) (b *Bucket, err error) {
+func New(bt BucketType, cfg any) (b *Bucket, err error) {
 	rt := reflect.TypeOf(cfg)
 
 	switch bt {
-	case "AwsProvider":
-		//TODO implementar aws provider
+	case AwsProvider:
+		if rt.Name() != "AwsConfig" {
+			return nil, fmt.Errorf("config need's to be of type AwsConfig")
+		}
+
+		b.p = newAwsSession(cfg.(AwsConfig))
 	default:
-		return nil, fmt.ErrorF("type not implemented")
+		return nil, fmt.Errorf("type not implemented")
 	}
 
 	return
