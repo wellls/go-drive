@@ -18,7 +18,7 @@ func New(qt QueueType, cfg any) (q *Queue, err error) {
 	switch qt {
 	case RabbitMQ:
 		if rt.Name() != "RabbitMQConfig" {
-			return nil, fmt.Errorf("Config need's to be of type RabbitMQConfig")
+			return nil, fmt.Errorf("config need's to be of type RabbitMQConfig")
 		}
 		conn, err := NewRabbitConn(cfg.(RabbitMQConfig))
 		if err != nil {
