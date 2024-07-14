@@ -6,6 +6,8 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
 
 type AwsConfig struct {
@@ -31,6 +33,20 @@ type awsSession struct {
 }
 
 func (as *awsSession) Download(src, dst string) (file *os.File, err error) {
+	file, err = os.Create(dst)
+	if err != nil {
+		return
+	}
+	defer file.Close()
+
+	downloader := s3manager.NewDownloader(as.sess)
+
+	_, err = downloader.Download(file,
+		&s3.GetObjectInput{
+			Bucket: aws.String(as.bucketDownload),
+			Key:    aws.String(src),
+		})
+
 	return
 }
 
