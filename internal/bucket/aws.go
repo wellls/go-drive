@@ -51,7 +51,15 @@ func (as *awsSession) Download(src, dst string) (file *os.File, err error) {
 }
 
 func (as *awsSession) Upload(file io.Reader, key string) error {
-	return nil
+	uploader := s3manager.NewUploader(as.sess)
+
+	_, err := uploader.Upload(&s3manager.UploadInput{
+		Bucket: aws.String(as.bucketUpload),
+		Key:    aws.String(key),
+		Body:   file,
+	})
+
+	return err
 }
 
 func (as *awsSession) Delete(key string) error {
