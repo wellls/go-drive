@@ -63,5 +63,19 @@ func (as *awsSession) Upload(file io.Reader, key string) error {
 }
 
 func (as *awsSession) Delete(key string) error {
-	return nil
+	svc := s3.New(as.sess)
+
+	_, err := svc.DeleteObject(&s3.DeleteObjectInput{
+		Bucket: aws.String(as.bucketDownload),
+		Key:    aws.String(key),
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return svc.WaitUntilObjectNotExists(&s3.HeadObjectInput{
+		Bucket: aws.String(as.bucketDownload),
+		Key:    aws.String(key),
+	})
 }
