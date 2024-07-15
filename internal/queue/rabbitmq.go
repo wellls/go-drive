@@ -10,7 +10,7 @@ import (
 type RabbitMQConfig struct {
 	URL       string
 	TopicName string
-	Timeout   time.Time
+	Timeout   time.Duration
 }
 
 func NewRabbitConn(cfg RabbitMQConfig) (rc *RabbitConnection, err error) {
